@@ -17,12 +17,13 @@ const {
 
 //making the project type
 const ProjectType=new GraphQLObjectType({
-    name:'project',
+    name:'Project',
     fields:()=>({
         id:{type:GraphQLID},
         name:{type:GraphQLString},
         description:{type:GraphQLString},
-        status:{type:GraphQLString}
+        status:{type:GraphQLString},
+        startDate: { type: GraphQLString },
     })
 
 })
