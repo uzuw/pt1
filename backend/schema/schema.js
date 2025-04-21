@@ -12,6 +12,7 @@ const {
     GraphQLSchema,
     GraphQLNonNull,
     graphql,
+    GraphQLInputObjectType,
 }=require('graphql');
 
 
@@ -50,8 +51,58 @@ const RootQuery =new GraphQLObjectType({
     }
 });
 
+//mutaion is a object type
+const Mutation=new GraphQLObjectType({
+    name:'Mutation',
+    fields:{
+        addProject:{
+            type:ProjectType,
+            args:{
+                name:{type:GraphQLNonNull(GraphQLString)},
+                description:{type:GraphQLNonNull(GraphQLString)},
+                status:{type:new GraphQLEnumType({
+                    name: 'ProjectStatus',
+                    values:{
+                        'new':{value:'Not Started'},
+                        'progress':{value:'In Progress'},
+                        'completed':{value:'Completed'},
+                    },}),},
+                startDate: { type: GraphQLString },
+            },
+            //resolver function 
+            resolve(parent,args){
+                const project=new Project({
+                    name:args.name,
+                    description:args.description,
+                    status:args.status,
+                    startDate: args.startDate || new Date().toISOString(),
+                }); //new Project instance 
+
+                return project.save();
+            },
+        },
+
+        deleteProject:{
+            type:ProjectType,
+            args:{id:{type:GraphQLNonNull(GraphQLID)}},
+            resolve(parent,args){
+                return Project.findByIdAndDelete(args.id)
+            }
+        },
+
+
+
+
+
+
+
+    }
+
+});
+
+
 
 module.exports=new GraphQLSchema({
     query:RootQuery,
-    // mutation
+    mutation:Mutation,
 });
