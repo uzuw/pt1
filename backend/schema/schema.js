@@ -77,8 +77,10 @@ const Mutation=new GraphQLObjectType({
                     status:args.status,
                     startDate: args.startDate || new Date().toISOString(),
                 }); //new Project instance 
-
+                console.log(`addeed proj ${args.name}`.green.bold)
                 return project.save();
+
+                
             },
         },
 
@@ -86,10 +88,44 @@ const Mutation=new GraphQLObjectType({
             type:ProjectType,
             args:{id:{type:GraphQLNonNull(GraphQLID)}},
             resolve(parent,args){
+                console.log(`deleted proj ${args.i}`.red.bold);
                 return Project.findByIdAndDelete(args.id)
             }
         },
 
+        updateProject:{
+            type:ProjectType,
+            args:{
+                id:{type:GraphQLNonNull(GraphQLID)},
+                name:{type:GraphQLString},
+                description:{type:GraphQLString},
+                status:{
+                    type:new GraphQLEnumType({
+                        name:"UpdatedProjectStatus",
+                        values:{
+                            'new': {value: 'Not Started'},
+                            'progress': {value: 'In Progress'},
+                            'completed': {value: 'Completed'}
+                        }
+                    }),defaultValue:'Not Started'
+                }
+
+            },
+            resolve(parent,args){
+                return Project.findByIdAndUpdate(args.id,
+                    {
+                        $set:{
+                            name:args.name,
+                            description:args.description,
+                            status:args.status,
+                        }
+                    },
+                    {
+                        new:true //if doesnot exist then it creates a new obj
+                    },console.log(`updated project ${args.name}`.yellow.bold),
+                )
+            }
+        }
 
 
 
