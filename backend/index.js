@@ -19,10 +19,10 @@ connectDB();
 app.use(cors());
 
 //graphql endpoint
-app.use('/graphql',graphqlHTTP({
+app.use('/graphql',graphqlHTTP((req) => ({
     schema,
     graphiql:process.env.NODE_ENV==='development'
-}))
+})));
 
 
 
