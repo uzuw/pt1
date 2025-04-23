@@ -4,6 +4,7 @@ const cors=require('cors')
 const schema=require('./schema/schema')
 const colors=require('colors')
 const connectDB=require('./config/db')
+const authRoutes = require('./routes/authRoutes'); //authentication routes
 
 //importing the enviroment varibles
 require('dotenv').config();
@@ -18,9 +19,14 @@ connectDB();
 //cors setup
 app.use(cors());
 
+
+//auth endpoint
+app.use('/auth', authRoutes);
+
 //graphql endpoint
 app.use('/graphql',graphqlHTTP((req) => ({
     schema,
+    context: { user: req.user },
     graphiql:process.env.NODE_ENV==='development'
 })));
 
