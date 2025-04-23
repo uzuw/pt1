@@ -1,8 +1,15 @@
-const mongoose=require('mongoose');
-const UserSchema=new mongoose.Schema({
-    username:{type:String, required:true, unique:true},
-    email:{type:String, required:true, unique:true},
-    password:{type:String, required:true, unique:true},
-},{timestamps:true});
+const mongoose = require('mongoose');
 
-module.exports=mongoose.model('User',UserSchema);
+const UserSchema = new mongoose.Schema({
+  githubId: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  username: String,
+  avatar: String,
+  email: String,
+  password:String,
+}, { timestamps: true });
+
+module.exports = mongoose.model('User', UserSchema);
