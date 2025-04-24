@@ -3,7 +3,7 @@ const jwt=require('jsonwebtoken')
 const axios=require('axios')
 const User=require('../models/User')
 const router=express.Router();//initializing the router
-
+require('dotenv').config();
 
 //importing the client secrets from the environment variables
 
@@ -12,8 +12,9 @@ const CLIENT_SECRET=process.env.CLIENT_SECRET
 const JWT_SECRET=process.env.JWT_SECRET
 
 //STep 1: REdirecting to the github
-router.get('/github',(req,res)=>{
-    const redirectUrl=`https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=user`;
+router.get('/github', (req, res) => {
+    console.log('✅ /auth/github route was hit');
+    const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=user`;
     res.redirect(redirectUrl);
 });
 

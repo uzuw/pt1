@@ -21,6 +21,9 @@ app.use(cors());
 
 
 //auth endpoint
+app.get('/', (req, res) => {
+    res.send('Backend is alive!');
+  });
 app.use('/auth', authRoutes);
 
 //graphql endpoint
