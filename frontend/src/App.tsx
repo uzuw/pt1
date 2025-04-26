@@ -1,21 +1,27 @@
+import Home from './pages/Home'
 import './App.css'
 import Navbar from './components/Navbar'
 import { Routes, Route } from 'react-router-dom'
+import More from './pages/More'
+import Recent from './pages/Recent'
+import Settings from './pages/Settings'
+import Add from "./pages/Add"
 
 const App = () => {
   return (
     <>
+    <div className="bg-white min-h-screen w-full relative">
     <Navbar/>
-    <div className="p-4">
+    <div className="">
         <Routes>
-          <Route path="/" element={<h1>Home🏠</h1>} />
-          <Route path="/add" element={<h1>add➕</h1>} />
-          <Route path="/projects" element={<h1>projects📃</h1>} />
-          <Route path="/history" element={<h1>history⌛</h1>} />
-          <Route path="/profile" element={<h1>profile🙅‍♂️</h1>} />
-          <Route path="/settings" element={<h1>settings⚙️</h1>} />
+          <Route path="/" element={<Home/>} />
+          <Route path="/add" element={<Add/>} />
+          <Route path="/projects" element={<More/>} />
+          <Route path="/history" element={<Recent/>} />
+          <Route path="/settings" element={<Settings/>}/>
         </Routes>
       </div>
+    </div>
     </>
   )
 }

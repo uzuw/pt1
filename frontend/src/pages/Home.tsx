@@ -16,7 +16,7 @@ const Home = () => {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer"
+              className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-50"
             >
               <h2 className="text-xl font-bold mb-2">{project.title}</h2>
               <p className="text-gray-600">{project.description}</p>
