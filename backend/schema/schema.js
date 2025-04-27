@@ -5,7 +5,7 @@ const jwt=require('jsonwebtoken')
 const User=require('../models/User')
 const generateToken=require('../utils/generateToken')
 
-//importing the things required fot the graphqltypes
+//importing the things required for the graphqltypes
 const {
     GraphQLObjectType,
     GraphQLID,
@@ -20,18 +20,25 @@ const {
 }=require('graphql');
 
 
-//making the project type
-const ProjectType=new GraphQLObjectType({
-    name:'Project',
-    fields:()=>({
-        id:{type:GraphQLID},
-        name:{type:GraphQLString},
-        description:{type:GraphQLString},
-        status:{type:GraphQLString},
-        startDate: { type: GraphQLString },
-    })
 
-})
+const ProjectType = new GraphQLObjectType({
+  name: 'Project',
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+    status: { type: GraphQLString },
+    startDate: { type: GraphQLString }, // dates are usually returned as strings in GraphQL
+    githubRepoUrl: { type: GraphQLString },
+    user: { type: GraphQLID }, // just return user id
+    tags: { type: new GraphQLList(GraphQLString) },
+    completedDate: { type: GraphQLString },
+    createdAt: { type: GraphQLString }, // timestamps true -> this will be automatically added
+    updatedAt: { type: GraphQLString },
+  })
+});
+
+module.exports = ProjectType;
 
 
 //root query
@@ -74,19 +81,29 @@ const Mutation = new GraphQLObjectType({
               },
             }),
           },
-          startDate: { type: GraphQLString },
+          startDate: { type: GraphQLString }, // optional, if not provided => default to now
+          githubRepoUrl: { type: GraphQLString }, // new field
+          tags: { type: new GraphQLList(GraphQLString) }, // new field
+          completedDate: { type: GraphQLString }, // new field
+          userId: { type: GraphQLNonNull(GraphQLID) }, // to link the user who created the project
         },
-        resolve(parent, args) {
+        async resolve(parent, args) {
           const project = new Project({
             name: args.name,
             description: args.description,
             status: args.status,
             startDate: args.startDate || new Date().toISOString(),
+            githubRepoUrl: args.githubRepoUrl,
+            tags: args.tags,
+            completedDate: args.completedDate,
+            user: args.userId, // setting the user
           });
-          console.log(`added proj ${args.name}`.green.bold);
-          return project.save();
+      
+          console.log(`added project ${args.name}`.green.bold);
+          return await project.save();
         },
       },
+      
   
       deleteProject: {
         type: ProjectType,
@@ -112,24 +129,33 @@ const Mutation = new GraphQLObjectType({
                 completed: { value: 'Completed' },
               },
             }),
-            defaultValue: 'Not Started',
           },
+          startDate: { type: GraphQLString },
+          githubRepoUrl: { type: GraphQLString },
+          tags: { type: new GraphQLList(GraphQLString) },
+          completedDate: { type: GraphQLString },
         },
-        resolve(parent, args) {
-          console.log(`updated project ${args.name}`.yellow.bold);
-          return Project.findByIdAndUpdate(
+        async resolve(parent, args) {
+          console.log(`updating project ${args.id}`.yellow.bold);
+      
+          const updateFields = {};
+      
+          if (args.name !== undefined) updateFields.name = args.name;
+          if (args.description !== undefined) updateFields.description = args.description;
+          if (args.status !== undefined) updateFields.status = args.status;
+          if (args.startDate !== undefined) updateFields.startDate = args.startDate;
+          if (args.githubRepoUrl !== undefined) updateFields.githubRepoUrl = args.githubRepoUrl;
+          if (args.tags !== undefined) updateFields.tags = args.tags;
+          if (args.completedDate !== undefined) updateFields.completedDate = args.completedDate;
+      
+          return await Project.findByIdAndUpdate(
             args.id,
-            {
-              $set: {
-                name: args.name,
-                description: args.description,
-                status: args.status,
-              },
-            },
+            { $set: updateFields },
             { new: true }
           );
         },
       },
+      
   
       register: {
         type: GraphQLString,
