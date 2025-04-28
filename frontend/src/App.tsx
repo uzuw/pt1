@@ -7,6 +7,7 @@ import Recent from './pages/Recent'
 import Settings from './pages/Settings'
 import Add from "./pages/Add"
 
+
 const App = () => {
   return (
     <>
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/projects" element={<More/>} />
           <Route path="/history" element={<Recent/>} />
           <Route path="/settings" element={<Settings/>}/>
+          
         </Routes>
       </div>
     </div>

@@ -1,0 +1,11 @@
+frontend structure
+
+1) in add route we can run the add query which will interact with gql apollo server
+
+2) in home route 
+-databse contents are displayed 
+-card components are used to display the projects in the project format 
+
+3) in the more route it will be showing the al github repos that user currently have (public)
+
+4)in the recent/history route the user can view their changes and issue history
