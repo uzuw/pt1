@@ -2,8 +2,21 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_PROJECT } from "../graphql/mutations/projectMutation";
 import { AddProjectInput, AddProjectResponse } from "../graphql/types/projectTypes";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const Add = () => {
+  // Login function (existing one)
+  const login = async (email, password) => {
+    const response = await axios.post('/auth/login', { email, password });
+    
+    if (response.data.token) {
+      // Save the token in localStorage or cookies
+      localStorage.setItem('authToken', response.data.token);
+    }
+  };
+
+  // State to manage form data
   const [formData, setFormData] = useState<AddProjectInput>({
     name: "",
     description: "",
@@ -11,14 +24,17 @@ const Add = () => {
     startDate: new Date().toISOString().split("T")[0],
     githubRepoUrl: "",
     tags: [],
+    user: "", // Initially empty, will be set later
   });
 
+  // Mutation hook
   const [addProject, { loading, error }] = useMutation<AddProjectResponse, { variables: AddProjectInput }>(ADD_PROJECT, {
     onError(err) {
       console.error("Mutation error:", err);
     },
   });
 
+  // Handle input field changes
   const handleChange = (field: keyof AddProjectInput, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -26,6 +42,7 @@ const Add = () => {
     }));
   };
 
+  // Handle tag changes
   const handleTagChange = (tag: string) => {
     setFormData(prev => ({
       ...prev,
@@ -35,27 +52,43 @@ const Add = () => {
     }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      await addProject({
-        variables: formData,
-      });
 
-      console.log("Project added successfully!");
+    // Get the userId from the JWT token stored in localStorage
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      const decodedToken = jwt_decode<{ id: string }>(token);
+      const userId = decodedToken.id; // This is the userId from the token
 
-      // Reset form
-      setFormData({
-        name: "",
-        description: "",
-        status: "Not Started",
-        startDate: new Date().toISOString().split("T")[0],
-        githubRepoUrl: "",
-        tags: [],
-      });
+      // Update the form data with the userId
+      const updatedFormData = { ...formData, user: userId };
 
-    } catch (error) {
-      console.error("Error adding project:", error);
+      try {
+        // Submit the form data with the userId
+        await addProject({
+          variables: updatedFormData,
+        });
+
+        console.log("Project added successfully!");
+
+        // Reset form after successful submission
+        setFormData({
+          name: "",
+          description: "",
+          status: "Not Started",
+          startDate: new Date().toISOString().split("T")[0],
+          githubRepoUrl: "",
+          tags: [],
+          user: "",
+        });
+
+      } catch (error) {
+        console.error("Error adding project:", error);
+      }
+    } else {
+      console.error("No token found, please log in first.");
     }
   };
 
