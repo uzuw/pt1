@@ -11,7 +11,7 @@ query getProjects{
         githubRepoUrl
         tags
         conpletedDate
-        userId
+        user
     }
 
 }

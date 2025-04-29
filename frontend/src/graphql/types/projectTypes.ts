@@ -17,7 +17,7 @@ export interface AddProjectInput {
       status: 'Not Started' | 'In Progress' | 'Completed';
       startDate?: string;
       githubRepoUrl?: string;
-      tags?: string[];
+      tags: string[];
     };
   }
   

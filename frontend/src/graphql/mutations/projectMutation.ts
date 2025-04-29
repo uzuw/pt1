@@ -9,7 +9,7 @@ export const ADD_PROJECT = gql`
     $startDate: String
     $githubRepoUrl: String
     $tags: [String]
-    $userId:ID!
+    $user:ID!
   ) {
     addProject(
       name: $name
@@ -18,7 +18,7 @@ export const ADD_PROJECT = gql`
       startDate: $startDate
       githubRepoUrl: $githubRepoUrl
       tags: $tags
-      userId:$userId
+      user:$user
     ) {
       id
       name
@@ -27,7 +27,7 @@ export const ADD_PROJECT = gql`
       startDate
       githubRepoUrl
       tags
-      $userId
+      user
     }
   }
 `;
