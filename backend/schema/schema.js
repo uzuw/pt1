@@ -81,13 +81,18 @@ const Mutation = new GraphQLObjectType({
               },
             }),
           },
-          startDate: { type: GraphQLString }, // optional, if not provided => default to now
-          githubRepoUrl: { type: GraphQLString }, // new field
-          tags: { type: new GraphQLList(GraphQLString) }, // new field
-          completedDate: { type: GraphQLString }, // new field
-          userId: { type: GraphQLNonNull(GraphQLID) }, // to link the user who created the project
+          startDate: { type: GraphQLString }, // optional, default to now
+          githubRepoUrl: { type: GraphQLString },
+          tags: { type: new GraphQLList(GraphQLString) },
+          completedDate: { type: GraphQLString },
         },
-        async resolve(parent, args) {
+        async resolve(parent, args, context) {
+          const userId = context.userId; // Get userId from context
+      
+          if (!userId) {
+            throw new Error('Unauthorized: No user logged in');
+          }
+      
           const project = new Project({
             name: args.name,
             description: args.description,
@@ -96,13 +101,13 @@ const Mutation = new GraphQLObjectType({
             githubRepoUrl: args.githubRepoUrl,
             tags: args.tags,
             completedDate: args.completedDate,
-            user: args.userId, // setting the user
+            user: userId, // Associate project with authenticated user
           });
       
           console.log(`added project ${args.name}`.green.bold);
           return await project.save();
         },
-      },
+      },      
       
   
       deleteProject: {
@@ -197,6 +202,9 @@ const Mutation = new GraphQLObjectType({
   
           const isMatch = await bcrypt.compare(pass, user.password);
           if (!isMatch) throw new Error('Password does not match');
+          // After login
+        localStorage.setItem("authToken", response.token);  // Assuming response contains JWT token
+
   
           const token = generateToken(user);
           return token;
