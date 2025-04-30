@@ -39,11 +39,7 @@ const ProjectSchema= new mongoose.Schema({
         enum:['Backend','Frontend','Devops','Other'],
         default:undefined
     },
-    completedDate: {
-        type: Date,
-        default: null
-      }
-    },
+},
     {
         timestamps:true //to add the createdAt and udatedAt
     }
