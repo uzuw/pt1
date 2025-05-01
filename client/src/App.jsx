@@ -9,7 +9,7 @@ import Home from './pages/Home';
 
 const App = () => {
   return (
-    <div className="bg-white min-h-screen w-full relative">
+    <div className=" min-h-screen w-full relative">
     <Navbar/>
     <div className="">
         <Routes>

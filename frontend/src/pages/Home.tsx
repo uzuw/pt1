@@ -7,7 +7,7 @@ const Home = () => {
     ];
   
     return (
-      <div className="mt-28 p-5 min-h-[100vh] w-full bg-white">
+      <div className="mt-20 p-5 min-h-[100vh] w-full bg-white">
         {/* Card Container */}
         <div className="w-full shadow-md border border-gray-200 p-10 rounded-2xl">
         <h1 className="font-extrabold text-3xl pb-10 text-red-400">PROJECTS</h1>
