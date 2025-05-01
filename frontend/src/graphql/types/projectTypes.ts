@@ -7,6 +7,7 @@ export interface AddProjectInput {
     startDate?: string;
     githubRepoUrl?: string;
     tags?: string[];
+    user:string;
   }
   
   export interface AddProjectResponse {
@@ -18,6 +19,7 @@ export interface AddProjectInput {
       startDate?: string;
       githubRepoUrl?: string;
       tags: string[];
+      user:string;
     };
   }
   

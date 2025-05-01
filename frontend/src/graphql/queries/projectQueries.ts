@@ -1,20 +1,16 @@
 import { gql } from "@apollo/client";
 
-const GET_PROJECTS=gql`
-query getProjects{
-    projects{
-        id
-        name
-        description
-        status
-        startDate
-        githubRepoUrl
-        tags
-        conpletedDate
-        user
-    }
-
+export const GET_PROJECTS = gql`
+  query GetProjectsByUser($userId: ID!) {
+  getProjectsByUser(userId: $userId) {
+    id
+    name
+    description
+    status
+    startDate
+    githubRepoUrl
+    tags
+  }
 }
-`
 
-export {GET_PROJECTS}
+`;

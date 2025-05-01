@@ -1,11 +1,11 @@
 import React from 'react'
 
-const More = () => {
+const All = () => {
   return (
     <div>
-      More apps
+      all
     </div>
   )
 }
 
-export default More
+export default All
